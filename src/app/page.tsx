@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/pixelact-ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -18,11 +17,11 @@ export default function Home() {
         <AgeIndicator age={16} />
         <div className="flex flex-col gap-[16px]"></div>
         <Alert>
-          <AlertTitle>You’re sixteen</AlertTitle>
+          <AlertTitle>You&apos;re sixteen</AlertTitle>
           <AlertDescription>
             Rain taps the bus window. Your band has its first gig tonight but
             finals start tomorrow. Study will help you pass and make your
-            parents proud, but you'll miss your first gig. Playing the gig will
+            parents proud, but you&apos;ll miss your first gig. Playing the gig will
             give you a chance to show your skills and impress your friends, but
             you might fail and disappoint your parents.
             <br />

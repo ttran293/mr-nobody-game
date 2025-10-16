@@ -40,10 +40,13 @@ const Button = React.forwardRef<
   React.ComponentRef<typeof ShadcnButton>,
   PixelButtonProps
 >(({ className, variant, ...props }, ref) => {
+  // Map pixel variants to base button variants
+  const baseVariant = variant === 'warning' || variant === 'success' ? 'default' : variant;
+  
   return (
     <ShadcnButton
       className={cn(
-        buttonVariants({ variant }),
+        buttonVariants({ variant: baseVariant }),
         pixelButtonVariants({ variant }),
         className
       )}
@@ -52,5 +55,7 @@ const Button = React.forwardRef<
     />
   );
 });
+
+Button.displayName = "Button";
 
 export { Button };
