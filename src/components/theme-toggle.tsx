@@ -27,15 +27,18 @@ export function ThemeToggle() {
     <Button
       variant="outline"
       size="icon"
-      className="h-9 w-9"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      className="h-9 w-9 pointer-events-auto cursor-pointer"
+      onClick={() => {
+        console.log("Theme toggle clicked, current theme:", theme);
+        setTheme(theme === "light" ? "dark" : "light");
+      }}
     >
       {theme === "light" ? (
-        <Moon className="h-4 w-4" />
+        <Moon className="h-4 w-4 " />
       ) : (
         <Sun className="h-4 w-4" />
       )}
       <span className="sr-only">Toggle theme</span>
     </Button>
-  )
+  );
 }

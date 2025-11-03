@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Press_Start_2P } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 
-const pressStart2P = Press_Start_2P({
-  weight: "400", // Press Start 2P usually only has one weight
-  subsets: ["latin"],
-});
+  const openSans = Open_Sans({
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-open-sans",
+  });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,13 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${pressStart2P.className} antialiased`}
-      >
+      <body className={`${openSans.variable} font-open-sans antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          enableSystem={false}
+          // forcedTheme="dark"
           disableTransitionOnChange
         >
           {children}
