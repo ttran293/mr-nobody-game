@@ -37,9 +37,10 @@ export async function POST(req: NextRequest) {
     });
     characters.push(character);
     return NextResponse.json(character.toJSON(), { status: 201 });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Invalid request";
     return NextResponse.json(
-      { error: err?.message ?? "Invalid request" },
+      { error: message },
       { status: 400 }
     );
   }

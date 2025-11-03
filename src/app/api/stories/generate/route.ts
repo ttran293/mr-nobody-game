@@ -44,9 +44,10 @@ export async function POST(req: NextRequest) {
     const text = (data.choices?.[0]?.message?.content || "").trim()
     const story = new Story({ text })
     return NextResponse.json(story.toJSON(), { status: 200 })
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to generate story";
     return NextResponse.json(
-      { error: err?.message ?? "Failed to generate story" },
+      { error: message },
       { status: 500 }
     )
   }

@@ -20,6 +20,12 @@ import { MenuButton } from "@/components/ui/menu-button";
 
 type Chapter = (typeof demo)[keyof typeof demo];
 
+interface Choice {
+  id: string;
+  text: string;
+  next: string;
+}
+
 interface Decision {
   chapterId: string;
   choiceId: string;
@@ -28,7 +34,7 @@ interface Decision {
 }
 
 function getChapter(id: string): Chapter {
-  return (demo as any)[id];
+  return (demo as Record<string, Chapter>)[id];
 }
 
 export default function DemoClient({
@@ -92,7 +98,6 @@ export default function DemoClient({
       const newDecisions = decisions.slice(0, -1);
       setDecisions(newDecisions);
       setChapterId(lastDecision.chapterId);
-      const prevChapter = getChapter(lastDecision.chapterId);
       setSelected(lastDecision.choiceId);
       setIsEnding(false);
       setRedoCountNow(redoCountNow - 1);
@@ -130,7 +135,7 @@ export default function DemoClient({
 
       {chapter.choices?.length ? (
         <RadioGroup value={selected ?? ""} onValueChange={setSelected}>
-          {chapter.choices.map((choice: any) => (
+          {chapter.choices.map((choice: Choice) => (
             <div key={choice.id} className="flex items-center gap-3">
               <RadioGroupItem value={choice.id} id={choice.id} className="cursor-pointer"/>
               <Label htmlFor={choice.id} className="text-2xl font-open-sans">
@@ -175,12 +180,12 @@ export default function DemoClient({
           <DialogFooter className="sm:justify-start gap-2 mt-4">
             <DialogClose asChild>
               <Button variant="outline" className="" onClick={onRegret}>
-                Yes, I'm sure.
+                Yes, I&apos;m sure.
               </Button>
             </DialogClose>
             <DialogClose asChild>
               <Button type="button" variant="outline">
-                No, I'll continue.
+                No, I&apos;ll continue.
               </Button>
             </DialogClose>
           </DialogFooter>
