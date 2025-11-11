@@ -12,17 +12,26 @@ export default async function Home() {
         <ThemeToggle />
       </div>
       <main className="flex flex-col gap-[32px] row-start-2 items-center max-w-4xl mx-auto px-4">
-        {/* <p className="text-2xl font-bold text-center">Welcome to the game</p> */}
+        {/* <p className="text-xl font-bold text-center">Welcome to the game</p> */}
         <div className="flex flex-col gap-4">
-          <Button className="text-2xl font-bold text-center font-open-sans">
-            New Game
+          <Button
+            asChild
+            className="text-xl font-bold text-center font-lexend"
+          >
+            <Link href="/game"> New Game</Link>
           </Button>
-          <Button asChild className="text-2xl font-bold text-center font-open-sans">
-            <Link href="/demo">
-              Play Demo
-            </Link>
+          <Button
+            asChild
+            className="text-xl font-bold text-center font-lexend"
+          >
+            <Link href="/demo">Play Demo</Link>
           </Button>
-
+          <Button
+            asChild
+            className="text-xl font-bold text-center font-lexend"
+          >
+            <Link href="/settings">Settings</Link>
+          </Button>
         </div>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center"></footer>

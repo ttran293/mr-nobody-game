@@ -1,16 +1,7 @@
 import { ThemeToggle } from "@/components/theme-toggle";
-import GameChapter from "@/components/game-chapter";
-import { demo } from "@/data/demo";
-// import { CharacterProps } from "@/lib/character";
+import { GameLoader } from "@/components/game/GameLoader";
 
-export default async function Demo() {
-//   const host = (await headers()).get("host")!;
-//   const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-//   const res = await fetch(`${protocol}://${host}/api/characters`, {
-//     cache: "no-store",
-//   });
-//   const characters = (await res.json()) as CharacterProps[];
-
+export default function Game() {
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <div className="fixed top-8 right-8 z-[100] pointer-events-auto">
@@ -20,7 +11,7 @@ export default async function Demo() {
         <div className="grid grid-flow-col grid-rows-3 gap-16">
           <div className="row-span-3">
             <div className="flex flex-col gap-4">
-              <GameChapter startId="chapter_1" dataChapters={demo} />
+              <GameLoader />
             </div>
           </div>
         </div>

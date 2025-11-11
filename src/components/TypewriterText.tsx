@@ -4,7 +4,7 @@ import Typewriter from "typewriter-effect";
 
 export default function TypewriterText({ text }: { text: string }) {
   return (
-    <div className="text-2xl font-open-sans">
+    <div className="text-2xl font-lexend">
       <Typewriter
         options={{
           autoStart: true,
