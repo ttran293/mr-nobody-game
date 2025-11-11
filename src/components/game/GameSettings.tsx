@@ -91,10 +91,7 @@ export function generateRandomSettings(): StorySettings {
   ];
 
   const era = pick(eras);
-  let yearStart: number;
-
-  yearStart = randomInRange(1990, 2020);
-  // const totalChapters = randomInRange(6, 12);
+  const yearStart = randomInRange(1990, 2020);
   const totalChapters = 6;
   const beatsPattern = Array.from({ length: totalChapters }, () =>
     pick(["neutral", "up", "down", "reflection"])
@@ -129,7 +126,7 @@ export function generateRandomSettings(): StorySettings {
     },
     choices: {
       perChapter: 3,
-      impactVariance: Math.random() * 0.5 + 0.5, // 0.5 to 1.0
+      impactVariance: Math.random() * 0.5 + 0.5,
       moralityAxis: pickMultiple(
         ["self", "others", "truth", "duty", "freedom", "tradition"],
         3
@@ -137,14 +134,14 @@ export function generateRandomSettings(): StorySettings {
     },
     aesthetics: {
       motifs: pickMultiple(motifs, randomInRange(2, 4)),
-      endingTone: "bittersweet",
+      endingTone: pick(endingTones),
     },
     generation: {
       wordsPerChapter: [
         randomInRange(50, 80),
         randomInRange(80, 120),
       ] as [number, number],
-      forbidMetaphors: Math.random() > 0.3, // 70% chance
+      forbidMetaphors: Math.random() > 0.3,
       secondPerson: true,
       continuityDepth: randomInRange(1, 3),
     },

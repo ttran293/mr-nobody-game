@@ -160,7 +160,6 @@ export async function POST(req: NextRequest) {
     - Show the culmination of their life journey
     - Reflect on the path they've taken
     - End with a sense of closure
-    - Match the ending tone: ${settings?.aesthetics?.endingTone || "bittersweet"}
     - No flowery metaphors or cosmic language
 
     Output only the narrative text, no choices.`;
