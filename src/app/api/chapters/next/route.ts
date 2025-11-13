@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     const characterContext = character
       ? `Character context: ${character.gender}, traits: ${character.traits?.join(", ") || "none"}.`
       : "";
-    let currentYear = (settings?.world?.yearStart ?? 0) + Number(previousChapter.age);
+    const currentYear = (settings?.world?.yearStart ?? 0) + Number(previousChapter.age);
     const untakenChoices = decision.untakenChoices;
   
     const storyPrompt = `Continue the story of this person's life.
