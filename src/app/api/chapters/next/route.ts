@@ -33,37 +33,31 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const ageIncrement = Math.floor(Math.random() * 4) + 3;
+    const ageIncrement = Math.floor(Math.random() * 4) + 5; // 5-8 years
     const nextAge = previousChapter.age + ageIncrement;
 
     const characterContext = character
       ? `Character context: ${character.gender}, traits: ${character.traits?.join(", ") || "none"}.`
       : "";
-
+    let currentYear = (settings?.world?.yearStart ?? 0) + Number(previousChapter.age);
+    const untakenChoices = decision.untakenChoices;
+  
     const storyPrompt = `Continue the story of this person's life.
-    - Use the context of the settings to generate the story.
-    - The context of the settings is:
-    - Era: ${settings?.world?.era}
-    - Year Start: ${settings?.world?.yearStart}
-    - Location: ${settings?.world?.location}
-    - Region: ${settings?.world?.region}
-    - Socioeconomic Tone: ${settings?.world?.socioeconomicTone}
+    - Current Year: ${currentYear}
 
-    
     Previous chapter (age ${previousChapter.age}): "${previousChapter.text}"
     ${decision.choiceText !== "Next" ? `Player's choice: "${decision.choiceText}"` : ""}
-
+    ${untakenChoices.length > 0 ? `Untaken choices: ${untakenChoices.map((c) => `"${c.text}"`).join(", ")}` : ""}
     The character is now age ${nextAge}. Write a chapter that naturally flows from the previous chapter and the decision.
     The chapter must match the time skip between the previous chapter and this chapter.
     The chapter must be realistic and grounded.
     Introduce new relationships and interactions with the people to shape the character's life such as family, friends, acquaintances, significant others, etc.
     The relationship must match the character's age and context.
+    Describe the decision and the consequences of the taken decision and the untaken choices.
 
     Requirements:
     - Use second person ("You...")
-    - Two paragraphs, 150-200 words.
-    - The first paragraph should only be a few sentences. It should be about previous chapter, the previous decision, and the consequences of the previous choice.
-    - The second paragraph can set up the current meaningful milestone in their life.
+    - One paragraph, around 120 words.
     - Stay realistic and grounded
     - No flowery metaphors or cosmic language
 
@@ -95,12 +89,14 @@ export async function POST(req: NextRequest) {
             .join("")
             .trim();
 
-    const choicesPrompt = `Based on this story chapter, generate exactly 3 meaningful choices for the character's age and context:
+    const choicesPrompt = `Based on this story chapter, generate exactly 2 or 3 meaningful choices for the character's age and context:
 
     "${storyText}"
 
     Requirements:
+    - Use second person ("You...")
     - Each choice should present a distinct path forward.
+    - Each choice should imply and aim to develop a character trait or aspect of the character's personality.
     - Choices should have realistic consequences and emotional weight.
     - Choices should have realistic risks and rewards.
     - Choices should have potential long-term consequences whether positive or negative.
@@ -114,7 +110,11 @@ export async function POST(req: NextRequest) {
       { "text": "Choice 2 text" },
       { "text": "Choice 3 text" }
     ]
-
+    or
+     [
+      { "text": "Choice 1 text" },
+      { "text": "Choice 2 text" },
+    ]
     No other text, just the JSON array.`;
     console.log(choicesPrompt);
 
@@ -149,11 +149,13 @@ export async function POST(req: NextRequest) {
         { text: "Reflect on the past" },
       ];
     }
-
+    
     const chapterNumber = parseInt(
       nextChapterId.replace("chapter_", "").replace("ending_", "")
     ) || 2;
+    console.log("chapterNumber", chapterNumber);
     const totalChapters = settings?.lifeArc?.totalMainChapters || 10;
+    console.log("totalChapters", totalChapters);
 
     const isEnding = chapterNumber >= totalChapters;
 

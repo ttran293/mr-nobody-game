@@ -16,5 +16,10 @@ export interface Decision {
   choiceId: string;
   choiceText: string;
   chapterAge: number;
+   untakenChoices: Array<{
+    id: string;
+    text: string;
+    next: string;
+  }>;
 }
 

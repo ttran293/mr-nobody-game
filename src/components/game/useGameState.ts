@@ -84,11 +84,22 @@ export function useGameState(
 
     if (!nextId || !chosen) return;
 
+    const untakenChoices = chapter.choices
+      .filter((c) => c.id !== selected)
+      .map((c) => ({
+        id: c.id,
+        text: c.text,
+        next: c.next,
+      }));
+
+    console.log(untakenChoices);
+
     const decision: Decision = {
       chapterId,
       choiceId: selected ?? "",
       choiceText: chosen.text,
       chapterAge: chapter.age,
+      untakenChoices: untakenChoices,
     };
 
     // Check if next chapter already exists

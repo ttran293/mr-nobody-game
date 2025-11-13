@@ -68,8 +68,8 @@ export function generateRandomSettings(): StorySettings {
   // ];
 
   const era = pick(eras);
-  const yearStart = randomInRange(1990, 2020);
-  const totalChapters = 6;
+  const yearStart = randomInRange(1990, 2000);
+  const totalChapters = 10;
   // const beatsPattern = Array.from({ length: totalChapters }, () =>
   //   pick(["neutral", "up", "down", "reflection"])
   // );

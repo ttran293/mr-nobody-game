@@ -95,17 +95,17 @@ export default function SettingsPage() {
               <Input
                 id="chapters"
                 type="number"
-                min="6"
-                max="10"
+                min="10"
+                max="15"
                 value={totalChapters}
                 onChange={(event) => {
-                  const value = parseInt(event.target.value, 10) || 6;
-                  setTotalChapters(Math.max(6, Math.min(10, value)));
+                  const value = parseInt(event.target.value, 10) || 10;
+                  setTotalChapters(Math.max(10, Math.min(15, value)));
                 }}
                 className="font-lexend"
               />
               <p className="text-sm text-muted-foreground font-lexend">
-                Choose between 6 and 10 chapters
+                Choose between 10 and 15 chapters
               </p>
             </div>
           )}
