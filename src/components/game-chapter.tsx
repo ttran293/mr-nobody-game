@@ -24,6 +24,7 @@ export default function GameChapter({
 
   useEffect(() => {
     setChapters(dataChapters);
+    console.log("dataChapters", dataChapters);
   }, [dataChapters]);
 
   const {
@@ -38,7 +39,7 @@ export default function GameChapter({
     onContinue,
     onRestart,
     onRegret,
-  } = useGameState(chapters, startId, setChapters, settings);
+  } = useGameState(chapters, startId, setChapters);
 
   if (!chapter) {
     return (

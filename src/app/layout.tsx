@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { GameSettingsProvider } from "@/components/game/GameSettingsContext";
 import { Lexend } from "next/font/google";
 
   const lexend = Lexend({
@@ -29,7 +30,9 @@ export default function RootLayout({
           // forcedTheme="dark"
           disableTransitionOnChange
         >
-          {children}
+          <GameSettingsProvider>
+            {children}
+          </GameSettingsProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MenuButton } from "@/components/ui/menu-button";
 import { Button } from "@/components/ui/button";
@@ -8,50 +8,47 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { generateRandomSettings, type StorySettings } from "@/components/game/GameSettings";
+import { useGameSettings } from "@/components/game/GameSettingsContext";
 
 export default function SettingsPage() {
   const [mode, setMode] = useState<"random" | "manual">("random");
-  const [totalChapters, setTotalChapters] = useState<number>(6);
-  const [settings, setSettings] = useState<StorySettings | null>(null);
+  const [totalChapters, setTotalChapters] = useState<number>(6);                      
+  const { settings, setSettings } = useGameSettings();
   const [showSuccess, setShowSuccess] = useState(false);
-
-  useEffect(() => {
-    const savedSettings = sessionStorage.getItem("gameSettings");
-    if (savedSettings) {
-      try {
-        const parsed = JSON.parse(savedSettings) as StorySettings;
-        setSettings(parsed);
-        setTotalChapters(parsed.lifeArc.totalMainChapters);
-      } catch (error) {
-        console.error("Failed to load saved settings", error);
-      }
-    }
-  }, []);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSave = () => {
-    let finalSettings: StorySettings;
+    setError(null);
+    setShowSuccess(false);
 
-    if (mode === "random") {
-      finalSettings = generateRandomSettings();
-    } else {
-      finalSettings = generateRandomSettings();
-      finalSettings.lifeArc.totalMainChapters = totalChapters;
-      finalSettings.lifeArc.beatsPattern = Array.from(
-        { length: totalChapters },
-        () => {
-          const beats = ["neutral", "up", "down", "reflection"];
-          return beats[Math.floor(Math.random() * beats.length)];
-        }
-      );
+    try {
+      let finalSettings: StorySettings;
+
+      if (mode === "random") {
+        finalSettings = generateRandomSettings();
+      } else {
+        finalSettings = generateRandomSettings();
+        finalSettings.lifeArc.totalMainChapters = totalChapters;
+      }
+
+      if (!finalSettings || !finalSettings.lifeArc) {
+        setError("Failed to generate valid settings");
+        return;
+      }
+
+      setSettings(finalSettings);
+      setShowSuccess(true);
+
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+    } catch (error) {
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Unknown error occurred";
+      setError(`Error saving settings: ${errorMessage}`);
+      console.error("Error in handleSave:", error);
     }
-
-    sessionStorage.setItem("gameSettings", JSON.stringify(finalSettings));
-    setSettings(finalSettings);
-    setShowSuccess(true);
-
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
   };
 
   return (
@@ -69,9 +66,11 @@ export default function SettingsPage() {
           <div className="flex flex-col gap-4">
             <Label className="text-lg font-lexend">Settings Mode</Label>
             <RadioGroup
-              defaultValue="random"
               value={mode}
-              onValueChange={(value) => setMode(value as "random" | "manual")}
+              onValueChange={(value) => {
+                console.log("RadioGroup value changed to:", value);
+                setMode(value as "random" | "manual");
+              }}
             >
               <div className="flex items-center gap-3">
                 <RadioGroupItem value="random" id="random" />
@@ -111,6 +110,14 @@ export default function SettingsPage() {
             </div>
           )}
 
+          {error && (
+            <Alert className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
+              <AlertDescription className="text-red-800 dark:text-red-200 font-lexend">
+                {error}
+              </AlertDescription>
+            </Alert>
+          )}
+
           {showSuccess && (
             <Alert className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
               <AlertDescription className="text-green-800 dark:text-green-200 font-lexend">
@@ -119,7 +126,12 @@ export default function SettingsPage() {
             </Alert>
           )}
 
-          <Button onClick={handleSave} className="w-full font-lexend" size="lg">
+          <Button 
+            onClick={handleSave} 
+            className="w-full font-lexend" 
+            size="lg"
+            type="button"
+          >
             Save Settings
           </Button>
         </div>

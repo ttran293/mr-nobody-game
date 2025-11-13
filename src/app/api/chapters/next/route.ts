@@ -40,21 +40,31 @@ export async function POST(req: NextRequest) {
       ? `Character context: ${character.gender}, traits: ${character.traits?.join(", ") || "none"}.`
       : "";
 
-    const storyPrompt = `Continue a branching, cinematic coming-of-age story.
+    const storyPrompt = `Continue the story of this person's life.
+    - Use the context of the settings to generate the story.
+    - The context of the settings is:
+    - Era: ${settings?.world?.era}
+    - Year Start: ${settings?.world?.yearStart}
+    - Location: ${settings?.world?.location}
+    - Region: ${settings?.world?.region}
+    - Socioeconomic Tone: ${settings?.world?.socioeconomicTone}
 
+    
     Previous chapter (age ${previousChapter.age}): "${previousChapter.text}"
-    Player's choice: "${decision.choiceText}"
-    ${characterContext}
+    ${decision.choiceText !== "Next" ? `Player's choice: "${decision.choiceText}"` : ""}
 
-    The character is now age ${nextAge}. Write the next chapter that naturally flows from this decision.
-    The chapter must match the time skip between the previous chapter and the next chapter.
+    The character is now age ${nextAge}. Write a chapter that naturally flows from the previous chapter and the decision.
+    The chapter must match the time skip between the previous chapter and this chapter.
+    The chapter must be realistic and grounded.
+    Introduce new relationships and interactions with the people to shape the character's life such as family, friends, acquaintances, significant others, etc.
+    The relationship must match the character's age and context.
 
     Requirements:
     - Use second person ("You...")
-    - One paragraph, 80-120 words
-    - Realistic, grounded, emotionally restrained — not poetic or abstract
-    - Show consequences of the previous choice
-    - Set up the next meaningful moment in their life
+    - Two paragraphs, 150-200 words.
+    - The first paragraph should only be a few sentences. It should be about previous chapter, the previous decision, and the consequences of the previous choice.
+    - The second paragraph can set up the current meaningful milestone in their life.
+    - Stay realistic and grounded
     - No flowery metaphors or cosmic language
 
     Output only the narrative text, no choices.`;
@@ -90,11 +100,14 @@ export async function POST(req: NextRequest) {
     "${storyText}"
 
     Requirements:
-    - Each choice should present a distinct path forward
-    - Choices should have real consequences and emotional weight
-    - Keep choice text short (5-10 words max)
-    - Make them realistic and grounded
+    - Each choice should present a distinct path forward.
+    - Choices should have realistic consequences and emotional weight.
+    - Choices should have realistic risks and rewards.
+    - Choices should have potential long-term consequences whether positive or negative.
+    - Keep choice text short (10-20 words max)
+    - Make them realistic and grounded in the context of the story
     - Actions must be realistic with the character's age and context
+    - Actions must match a commonsense approach to the character's age and context
     - Return ONLY a JSON array in this format:
     [
       { "text": "Choice 1 text" },
@@ -123,7 +136,7 @@ export async function POST(req: NextRequest) {
             )
             .join("")
             .trim();
-
+    console.log(choicesText);
     let choicesData: { text: string }[] = [];
     try {
       const jsonMatch = choicesText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
@@ -145,11 +158,9 @@ export async function POST(req: NextRequest) {
     const isEnding = chapterNumber >= totalChapters;
 
     if (isEnding) {
-      const endingPrompt = `Write the final chapter (ending) of this coming-of-age story.
-
-    Previous chapter (age ${previousChapter.age}): "${previousChapter.text}"
-    Player's choice: "${decision.choiceText}"
-    ${characterContext}
+      const endingPrompt = `
+      
+      Write the final chapter (ending) of this coming-of-age story.
 
     The character is now age ${nextAge}. This is the final chapter of their story arc.
 

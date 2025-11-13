@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ChatOpenAI } from "@langchain/openai";
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 import type { Chapter } from "@/components/game/types";
-import { generateRandomSettings, type StorySettings } from "@/components/game/GameSettings";
+import { type StorySettings } from "@/components/game/GameSettings";
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
@@ -15,16 +15,19 @@ export async function POST(req: NextRequest) {
       );
     }
     const { settings } = (await req.json()) as { settings: StorySettings };
-    const { world, tone, lifeArc, choices, aesthetics, generation } = settings || generateRandomSettings();
     console.log(settings);
     const prompt = `Write the opening chapter of a branching, cinematic story about a person's life.
-
+    - Use the context of the settings to generate the story.
+    - The context of the settings is:
+    - Era: ${settings.world.era}
+    - Year Start: ${settings.world.yearStart}
+    - Location: ${settings.world.location}
+    - Region: ${settings.world.region}
+    - Socioeconomic Tone: ${settings.world.socioeconomicTone}
     - Use second person ("You..."), not first person ("I").
-    - Keep it one short paragraph around 80 words.
-    - Make it realistic, grounded, and emotionally restrained — not poetic or abstract.
-    - Describe the moment of birth and give a sense of the parents and the setting.
-    - Avoid cosmic or flowery metaphors (no light, destiny, souls, or universes).
-    - End with a line suggesting the world still chooses for you, for now.
+    - Keep it one short paragraph around 120 words.
+    - Make it realistic, grounded, and emotionally restrained.
+    - Describe the moment of birth and the setting of the story.
 
     Output only the short paragraph of narrative text.
     `;

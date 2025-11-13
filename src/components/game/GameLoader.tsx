@@ -1,38 +1,27 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import GameChapter from "@/components/game-chapter";
 import type { Chapter } from "./types";
-import { generateRandomSettings, type StorySettings } from "./GameSettings";
+import { generateRandomSettings } from "./GameSettings";
+import { useGameSettings } from "./GameSettingsContext";
 
 export function GameLoader() {
   const [chapters, setChapters] = useState<Record<string, Chapter>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [settings, setSettings] = useState<StorySettings | null>(null);
-
+  const { settings, setSettings } = useGameSettings();
+  const hasFetchedRef = useRef(false);
+  console.log("settings", settings);
   useEffect(() => {
-    // Check if settings are already saved in sessionStorage (from settings page)
-    let gameSettings: StorySettings;
-    const savedSettings = sessionStorage.getItem("gameSettings");
+    if (hasFetchedRef.current) return;
     
-    if (savedSettings) {
-      try {
-        gameSettings = JSON.parse(savedSettings) as StorySettings;
-        console.log("Using saved settings:", gameSettings);
-      } catch (e) {
-        // If parsing fails, generate new random settings
-        gameSettings = generateRandomSettings();
-        sessionStorage.setItem("gameSettings", JSON.stringify(gameSettings));
-        console.log("Generated new random settings:", gameSettings);
-      }
-    } else {
-      // No saved settings, generate random
-      gameSettings = generateRandomSettings();
-      sessionStorage.setItem("gameSettings", JSON.stringify(gameSettings));
-      console.log("Generated new random settings:", gameSettings);
+    const gameSettings = settings || generateRandomSettings();
+    
+    if (!settings) {
+      setSettings(gameSettings);
     }
 
-    setSettings(gameSettings);
+    hasFetchedRef.current = true;
 
     const fetchStartChapter = async () => {
       try {
@@ -67,7 +56,7 @@ export function GameLoader() {
     };
 
     fetchStartChapter();
-  }, []);
+  }, [settings, setSettings]);
 
 
   if (isLoading) {

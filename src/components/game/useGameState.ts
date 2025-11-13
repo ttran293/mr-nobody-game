@@ -1,15 +1,15 @@
 import { useEffect, useState, useRef } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { Chapter, Decision } from "./types";
-import type { StorySettings } from "./GameSettings";
+import { useGameSettings } from "./GameSettingsContext";
 
 export function useGameState(
   dataChapters: Record<string, Chapter>,
   startId: string,
-  onChaptersUpdate?: Dispatch<SetStateAction<Record<string, Chapter>>>,
-  settings?: StorySettings | null
+  onChaptersUpdate?: Dispatch<SetStateAction<Record<string, Chapter>>>
 ) {
   const getChapter = (id: string): Chapter | undefined => dataChapters[id];
+  const { settings } = useGameSettings();
   const settingsRef = useRef(settings);
   useEffect(() => {
     settingsRef.current = settings;
