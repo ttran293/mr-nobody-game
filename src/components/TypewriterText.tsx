@@ -4,14 +4,14 @@ import Typewriter from "typewriter-effect";
 
 export default function TypewriterText({ text }: { text: string }) {
   return (
-    <div className="text-2xl font-lexend">
+    <div className="text-lg font-lexend">
       <Typewriter
         options={{
           autoStart: true,
           loop: false,
         }}
         onInit={(typewriter) => {
-          typewriter.changeDelay(25).typeString(text).start();
+          typewriter.changeDelay(30).typeString(text).start();
         }}
       />
     </div>

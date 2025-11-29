@@ -7,34 +7,41 @@ import { Button } from "@/components/ui/button";
 export default async function Home() {
 
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <div className="fixed top-8 right-8 z-50">
+    <div className="font-sans min-h-screen w-full bg-background flex items-center justify-center">
+      {/* Fixed button at top right */}
+      <div className="fixed top-8 right-8 z-[100] pointer-events-auto">
         <ThemeToggle />
       </div>
-      <main className="flex flex-col gap-[32px] row-start-2 items-center max-w-4xl mx-auto px-4">
-        {/* <p className="text-xl font-bold text-center">Welcome to the game</p> */}
-        <div className="flex flex-col gap-4">
+      
+      {/* Centered main content */}
+      <main className="flex flex-col gap-8 items-stretch w-full max-w-md px-6">
+        <h1 className="text-3xl font-bold text-center">Mr. Nobody</h1>
+        <div className="flex flex-col gap-4 w-full">
           <Button
             asChild
-            className="text-xl font-bold text-center font-lexend"
+            size="lg"
+            className="text-xl font-bold text-center w-full"
           >
-            <Link href="/game"> New Game</Link>
+            <Link href="/game">New Game</Link>
           </Button>
           <Button
             asChild
-            className="text-xl font-bold text-center font-lexend"
+            size="lg"
+            variant="outline"
+            className="text-xl font-bold text-center w-full  "
           >
             <Link href="/demo">Play Demo</Link>
           </Button>
-          <Button
+          {/* <Button
             asChild
-            className="text-xl font-bold text-center font-lexend"
+            size="lg"
+            variant="outline"
+            className="text-xl font-bold text-center w-full"
           >
             <Link href="/settings">Settings</Link>
-          </Button>
+          </Button> */}
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center"></footer>
     </div>
   );
 }

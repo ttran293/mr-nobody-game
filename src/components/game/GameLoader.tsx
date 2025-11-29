@@ -2,26 +2,33 @@
 import { useState, useEffect, useRef } from "react";
 import GameChapter from "@/components/game-chapter";
 import type { Chapter } from "./types";
-import { generateRandomSettings } from "./GameSettings";
+import { generateRandomSettings, generateRandomCharacter } from "./GameSettings";
 import { useGameSettings } from "./GameSettingsContext";
+import TypewriterText from "@/components/TypewriterText";
 
 export function GameLoader() {
   const [chapters, setChapters] = useState<Record<string, Chapter>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [initialCharacter, setInitialCharacter] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-  const { settings, setSettings } = useGameSettings();
-  const hasFetchedRef = useRef(false);
-  console.log("settings", settings);
-  useEffect(() => {
-    if (hasFetchedRef.current) return;
-    
-    const gameSettings = settings || generateRandomSettings();
-    
-    if (!settings) {
-      setSettings(gameSettings);
-    }
+  const { settings, character, setSettings, setCharacter } = useGameSettings();
+  const hasInitializedRef = useRef(false);
 
-    hasFetchedRef.current = true;
+  useEffect(() => {
+    // skip if already initialized (prevents re-running on re-renders)
+    if (hasInitializedRef.current) return;
+
+    // always generate fresh character and settings for a new game
+    const gameSettings = generateRandomSettings();
+    const gameCharacter = generateRandomCharacter();
+
+    setSettings(gameSettings);
+    setCharacter(gameCharacter);
+
+    // store the initial character for restart functionality
+    setInitialCharacter(JSON.parse(JSON.stringify(gameCharacter)));
+
+    hasInitializedRef.current = true;
 
     const fetchStartChapter = async () => {
       try {
@@ -33,7 +40,10 @@ export function GameLoader() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ settings: gameSettings }),
+          body: JSON.stringify({ 
+            settings: gameSettings,
+            character: gameCharacter 
+          }),
         });
 
         if (!res.ok) {
@@ -56,14 +66,33 @@ export function GameLoader() {
     };
 
     fetchStartChapter();
-  }, [settings, setSettings]);
 
+    // reset on unmount so next visit generates fresh data
+    return () => {
+      hasInitializedRef.current = false;
+    };
+  }, [setSettings, setCharacter]);
 
-  if (isLoading) {
+  const initialTime = 5; 
+  const [timeLeft, setTimeLeft] = useState(initialTime);
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+
+    const intervalId = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [timeLeft]); 
+
+  if (timeLeft > 0) {
     return (
-      <div className="flex flex-col gap-6">
-        <div className="text-center py-4">
-          <p className="text-lg font-lexend">Loading your story...</p>
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="text-center max-w-2xl px-4">
+          <TypewriterText
+            text={`There is no grand design. No script. Only the choices you make.`}
+          />
         </div>
       </div>
     );
@@ -71,15 +100,22 @@ export function GameLoader() {
 
   if (error) {
     return (
-      <div className="flex flex-col gap-6">
-        <div className="text-center py-4">
-          <p className="text-lg font-lexend">Error: {error}</p>
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="text-center max-w-2xl px-4">
+          <p className="text-xl font-lexend text-destructive">Error: {error}</p>
         </div>
-        <p className="text-xl font-lexend text-red-500">Error: {error}</p>
       </div>
     );
   }
 
-  return <GameChapter startId="chapter_1" dataChapters={chapters} settings={settings} />;
+  return (
+    <GameChapter
+      startId="chapter_1"
+      dataChapters={chapters}
+      settings={settings}
+      character={character}
+      initialCharacter={initialCharacter}
+    />
+  );
 }
 

@@ -40,39 +40,43 @@ export function GameActions({
 
   if (isEndingChapter) {
     return (
-      <div className="fixed bottom-8 right-8 z-50">
-        <Button variant="outline" className="w-24" onClick={onRestart}>
-          Restart
-        </Button>
+      <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm py-4 mt-8">
+        <div className="flex justify-center">
+          <Button variant="default" size="lg" onClick={onRestart}>
+            Restart Game
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
     <Dialog>
-      <div className="fixed bottom-8 right-8 z-50">
-        <div className="flex gap-2">
-          {canRegret && (
-            <DialogTrigger asChild>
-              <Button variant="outline" className="cursor-pointer">
-                I regret my decision
+      <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm py-4 mt-8">
+        {!isLoading && (
+          <div className="flex justify-center gap-3">
+            {canRegret && redoCountNow > 0 && (
+              <DialogTrigger asChild>
+                <Button variant="outline" size="lg">
+                  Regret ({redoCountNow})
+                </Button>
+              </DialogTrigger>
+            )}
+            {canRegret && redoCountNow === 0 && (
+              <Button variant="outline" size="lg" disabled>
+                Regret (0)
               </Button>
-            </DialogTrigger>
-          )}
-          {redoCountNow === 0 && (
-            <Button variant="outline" disabled>
-              I regret my decision
+            )}
+            <Button
+              variant="default"
+              size="lg"
+              onClick={onContinue}
+              disabled={hasChoices && !hasSelected}
+            >
+              Continue
             </Button>
-          )}
-          <Button
-            variant="outline"
-            className="cursor-pointer"
-            onClick={onContinue}
-            disabled={(hasChoices && !hasSelected) || isLoading}
-          >
-            {isLoading ? "Generating..." : "Continue"}
-          </Button>
-        </div>
+          </div>
+        )}
       </div>
       <DialogContent>
         <DialogHeader>

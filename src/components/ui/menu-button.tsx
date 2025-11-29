@@ -7,7 +7,7 @@ export function MenuButton() {
       <Link href="/">
         <Button
           variant="outline"
-          className="fixed bottom-8 left-8 z-50 cursor-pointer"
+          className="cursor-pointer"
         >
           <House size={24} />
         </Button>

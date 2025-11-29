@@ -24,7 +24,7 @@ export function ChapterChoices({
             id={choice.id}
             className="cursor-pointer"
           />
-          <Label htmlFor={choice.id} className="text-2xl font-lexend">
+          <Label htmlFor={choice.id} className="text-lg font-lexend">
             {choice.text}
           </Label>
         </div>

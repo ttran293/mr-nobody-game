@@ -12,20 +12,14 @@ export default async function Demo() {
 //   const characters = (await res.json()) as CharacterProps[];
 
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+    <div className="font-sans min-h-screen w-full bg-background">
       <div className="fixed top-8 right-8 z-[100] pointer-events-auto">
         <ThemeToggle />
       </div>
-      <main className="flex flex-col gap-[32px] row-start-2 items-center max-w-4xl mx-auto px-4">
-        <div className="grid grid-flow-col grid-rows-3 gap-16">
-          <div className="row-span-3">
-            <div className="flex flex-col gap-4">
-              <GameChapter startId="chapter_1" dataChapters={demo} />
-            </div>
-          </div>
-        </div>
+      
+      <main className="w-full mx-auto px-6 sm:px-8 lg:px-12 pt-8 pb-12">
+        <GameChapter startId="chapter_1" dataChapters={demo} />
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center"></footer>
     </div>
   );
 }

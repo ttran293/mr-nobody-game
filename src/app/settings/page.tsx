@@ -52,12 +52,17 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+    <div className="font-sans min-h-screen w-full bg-background">
+      {/* Fixed buttons at top right */}
       <div className="fixed top-8 right-8 z-[100] pointer-events-auto">
         <ThemeToggle />
       </div>
-      <MenuButton />
-      <main className="flex flex-col gap-[32px] row-start-2 items-center max-w-4xl mx-auto px-4 w-full">
+      <div className="fixed top-8 right-24 z-[100] pointer-events-auto">
+        <MenuButton />
+      </div>
+      
+      {/* Main content with proper spacing */}
+      <main className="flex flex-col gap-8 items-center max-w-4xl mx-auto px-6 sm:px-8 pt-24 pb-12 w-full">
         <div className="flex flex-col gap-6 w-full max-w-md">
           <h1 className="text-2xl font-bold text-center font-lexend">
             Game Settings
@@ -136,7 +141,6 @@ export default function SettingsPage() {
           </Button>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center"></footer>
     </div>
   );
 }
