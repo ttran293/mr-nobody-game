@@ -2,14 +2,14 @@
 import { useState, useEffect, useRef } from "react";
 import GameChapter from "@/components/game-chapter";
 import type { Chapter } from "./types";
-import { generateRandomSettings, generateRandomCharacter } from "./GameSettings";
+import { generateRandomSettings, generateRandomCharacter, type CharacterSettings } from "./GameSettings";
 import { useGameSettings } from "./GameSettingsContext";
 import TypewriterText from "@/components/TypewriterText";
 
 export function GameLoader() {
   const [chapters, setChapters] = useState<Record<string, Chapter>>({});
   const [isLoading, setIsLoading] = useState(true);
-  const [initialCharacter, setInitialCharacter] = useState<any>(null);
+  const [initialCharacter, setInitialCharacter] = useState<CharacterSettings | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { settings, character, setSettings, setCharacter } = useGameSettings();
   const hasInitializedRef = useRef(false);
