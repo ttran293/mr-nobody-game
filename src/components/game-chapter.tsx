@@ -21,7 +21,6 @@ interface GameChapterProps {
 export default function GameChapter({
   startId = "chapter_1",
   dataChapters,
-  settings,
   character,
   initialCharacter,
 }: GameChapterProps) {
@@ -169,10 +168,10 @@ export default function GameChapter({
                               Pivot Point: Age {timeline.pivotAge}
                             </p>
                             <p className="text-xs text-muted-foreground/60 mt-1">
-                              <span className="font-medium">You chose:</span> "{timeline.actualChoice}"
+                              <span className="font-medium">You chose:</span> &quot;{timeline.actualChoice}&quot;
                             </p>
                             <p className="text-xs text-muted-foreground/60">
-                              <span className="font-medium">What if you chose:</span> "{timeline.alternativeChoice}"
+                              <span className="font-medium">What if you chose:</span> &quot;{timeline.alternativeChoice}&quot;
                             </p>
                           </div>
                           <div className="prose prose-sm max-w-none text-muted-foreground/90">
