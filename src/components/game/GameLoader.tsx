@@ -86,7 +86,7 @@ export function GameLoader() {
     return () => clearInterval(intervalId);
   }, [timeLeft]); 
 
-  if (timeLeft > 0 && !isLoading) {
+  if (timeLeft > 0 && isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-center max-w-2xl px-4">
