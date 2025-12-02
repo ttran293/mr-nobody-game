@@ -8,28 +8,39 @@ interface ChapterChoicesProps {
   onSelect: (value: string) => void;
 }
 
-export function ChapterChoices({
-  choices,
-  selected,
-  onSelect,
-}: ChapterChoicesProps) {
+export function ChapterChoices({ choices, selected, onSelect }: ChapterChoicesProps) {
   if (choices.length === 0) return null;
 
   return (
     <RadioGroup value={selected ?? ""} onValueChange={onSelect}>
-      {choices.map((choice) => (
-        <div key={choice.id} className="flex items-center gap-3">
-          <RadioGroupItem
-            value={choice.id}
-            id={choice.id}
-            className="cursor-pointer"
-          />
-          <Label htmlFor={choice.id} className="text-lg font-lexend">
-            {choice.text}
-          </Label>
-        </div>
-      ))}
+      {choices.map((choice) => {
+        const isSelected = selected === choice.id;
+        return (
+          <div
+            key={choice.id}
+            className={`group flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200
+              ${isSelected ? "bg-blue-900/40 text-blue-300 scale-105" : "hover:bg-zinc-800 hover:scale-105"}
+            `}
+          >
+            <RadioGroupItem
+              value={choice.id}
+              id={choice.id}
+              className={`cursor-pointer transition-colors duration-200
+                ${isSelected ? "border-blue-400" : ""}
+                group-hover:border-blue-400
+              `}
+            />
+            <Label
+              htmlFor={choice.id}
+              className={`text-lg font-lexend transition-colors duration-200
+                ${isSelected ? "text-blue-300" : "group-hover:text-blue-400"}
+              `}
+            >
+              {choice.text}
+            </Label>
+          </div>
+        );
+      })}
     </RadioGroup>
   );
 }
-
