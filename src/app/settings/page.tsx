@@ -13,7 +13,7 @@ import { useGameSettings } from "@/components/game/GameSettingsContext";
 export default function SettingsPage() {
   const [mode, setMode] = useState<"random" | "manual">("random");
   const [totalChapters, setTotalChapters] = useState<number>(6);                      
-  const { settings, setSettings } = useGameSettings();
+  const { setSettings } = useGameSettings();
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

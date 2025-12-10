@@ -125,3 +125,12 @@
 .font-lexend {
   font-family: var(--font-lexend), system-ui, -apple-system, Segoe UI, Roboto, sans-serif !important;
 }
+
+@keyframes float {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
+.animate-float {
+  animation: float 1.5s ease-out forwards;
+}

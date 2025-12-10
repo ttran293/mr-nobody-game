@@ -31,19 +31,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const significantDecisions = decisions
-      .map((decision, index) => ({
-        ...decision,
-        index,
-        untakenCount: decision.untakenChoices.length,
-      }))
-      .filter(d => d.untakenCount > 0)
-      .sort((a, b) => {
-        const impactA = (decisions.length - a.index) * a.untakenCount;
-        const impactB = (decisions.length - b.index) * b.untakenCount;
-        return impactB - impactA;
-      })
-      .slice(0, 3); 
+    const decisionsWithAlternatives = decisions.filter(d => d.untakenChoices.length > 0);
+    
+    if (decisionsWithAlternatives.length === 0) {
+      return NextResponse.json(
+        { alternatives: [] },
+        { status: 200 }
+      );
+    }
+
+    const shuffled = [...decisionsWithAlternatives].sort(() => Math.random() - 0.5);
+    const significantDecisions = shuffled.slice(0, 2);
 
     if (significantDecisions.length === 0) {
       return NextResponse.json(
@@ -59,8 +57,9 @@ export async function POST(req: NextRequest) {
       configuration: { baseURL: "https://api.deepinfra.com/v1/openai" },
     });
 
-    const alternativePromises = significantDecisions.slice(0, 2).map(async (pivotDecision) => {
-      const alternativeChoice = pivotDecision.untakenChoices[0]; 
+    const alternativePromises = significantDecisions.map(async (pivotDecision) => {
+      const randomIndex = Math.floor(Math.random() * pivotDecision.untakenChoices.length);
+      const alternativeChoice = pivotDecision.untakenChoices[randomIndex]; 
       
       const alternativePrompt = `Generate an alternative life outcome based on a different decision.
 
@@ -74,7 +73,7 @@ export async function POST(req: NextRequest) {
       "${alternativeChoice.text}"
 
       OTHER OPTIONS THEY DIDN'T TAKE:
-      ${pivotDecision.untakenChoices.slice(1).map(c => `- "${c.text}"`).join('\n')}
+      ${pivotDecision.untakenChoices.filter(c => c.text !== alternativeChoice.text).map(c => `- "${c.text}"`).join('\n')}
 
       ACTUAL LIFE RESULTS:
       - Health: ${character.heath_score}/100
@@ -102,6 +101,8 @@ export async function POST(req: NextRequest) {
       11. 2-3 paragraphs, approximately 200-300 words
 
       Output only the alternative timeline narrative.`;
+      console.log("Alternative prompt:", alternativePrompt); 
+
 
       const response = await llm.invoke([
         new SystemMessage("You are a creative writer specializing in alternate timeline narratives."),

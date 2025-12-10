@@ -152,6 +152,9 @@ export async function POST(req: NextRequest) {
         }, { status: 200 });
       }
     }
+    
+    
+    
 
     const characterContext = updatedCharacter
       ? `Character: ${updatedCharacter.name} (${updatedCharacter.gender})
@@ -190,45 +193,43 @@ export async function POST(req: NextRequest) {
         - Set up the ending chapter which will provide closure
         - The character's journey is reaching its conclusion`;
           }
-        } else if (chapterNumber === Math.floor(totalChapters / 2)) {
-          narrativeContext = `
-        IMPORTANT NARRATIVE CONTEXT:
-        - This is the midpoint of the story (Chapter ${chapterNumber}/${totalChapters})
-        - This is a pivotal turning point in the character's life
-        - Major shifts in direction or perspective can happen here`;
-        }
+    } 
+    else if (chapterNumber === Math.floor(totalChapters / 2)) {
+        narrativeContext = `
+      IMPORTANT NARRATIVE CONTEXT:
+      - This is the midpoint of the story (Chapter ${chapterNumber}/${totalChapters})
+      - This is a pivotal turning point in the character's life
+      - Major shifts in direction or perspective can happen here`;
+    }
 
-        const storyPrompt = `Continue the story of this person's life.
-        - Current Year: ${currentYear}
-        ${characterContext}
+    const storyPrompt = `Continue the story of this person's life.
+    - Current Year: ${currentYear}
+    ${characterContext}
 
-        Story Progress: Chapter ${chapterNumber} of ${totalChapters} (${chaptersRemaining} chapters remaining until ending)
-        ${narrativeContext}
+    Story Progress: Chapter ${chapterNumber} of ${totalChapters} (${chaptersRemaining} chapters remaining until ending)
+    ${narrativeContext}
 
-        Thematic Focus (Motifs): ${motifs.join(", ")}
-        - Let these themes guide the narrative direction and emotional tone
-        - Weave them naturally into the story events
-        
-        Previous chapter (age ${previousChapter.age}): "${previousChapter.text}"
-        ${decision.choiceText !== "Next" ? `Player's choice: "${decision.choiceText}"` : ""}
-        ${untakenChoices.length > 0 ? `Untaken choices: ${untakenChoices.map((c) => `"${c.text}"`).join(", ")}` : ""}
-        The character is now age ${nextAge}. Write a chapter that naturally flows from the previous chapter and the decision.
-        The chapter must match the time skip between the previous chapter and this chapter.
-        The chapter must be realistic and grounded.
-        Introduce new relationships and interactions with the people to shape the character's life such as family, friends, acquaintances, significant others, etc.
-        The relationship must match the character's age and context.
-        Describe the decision and the consequences of the taken decision and the untaken choices.
+    Thematic Focus (Motifs): ${motifs.join(", ")}
+    - Must weave these themes into the narrative direction and emotional tone
+    
+    Previous chapter (age ${previousChapter.age}): "${previousChapter.text}"
+    ${decision.choiceText !== "Next" ? `Player's choice: "${decision.choiceText}"` : ""}
+    ${untakenChoices.length > 0 ? `Untaken choices: ${untakenChoices.map((c) => `"${c.text}"`).join(", ")}` : ""}
+    The character is now age ${nextAge}. 
+    The chapter must match the time skip between the previous chapter and this chapter.
+    The chapter must be specific, realistic, grounded and detailed.
+    If one of the character scores is below 40, the chapter must be about that attribute and the character's life but do not mention the score in the chapter.
+    Introduce new relationships and interactions with the people to shape the character's life such as family, friends, acquaintances, significant others, etc.
+    The relationship must match the character's age and context.
+    Describe the decision and the consequences of the taken decision and the untaken choices.
 
-        Requirements:
-        - Use second person ("You...")
-        - One paragraph, around 120 words.
-        - Stay realistic and grounded
-        - No flowery metaphors or cosmic language
-        - Let the motifs inform the story's focus and emotional weight
-        ${isApproachingEnd ? "- Begin weaving in elements of reflection and life's progression" : ""}
-        ${chaptersRemaining === 1 ? "- This should feel like a climactic moment before the final resolution" : ""}
+    Requirements:
+    - Use second person ("You...")
+    - One paragraph, around 120 words.
+    - Stay realistic and grounded
+    - Let the motifs inform the story's focus and emotional weight
 
-        Output only the narrative text, no choices.`;
+    Output only the narrative text, no choices.`;
 
     console.log(storyPrompt);
 
@@ -544,21 +545,23 @@ export async function POST(req: NextRequest) {
     ${isApproachingEnd ? `
     CRITICAL: This is near the end of the story (${chaptersRemaining} chapters left).
     - Choices should reflect life's culminating moments
-    - Include decisions about legacy, relationships, and life direction
     - Make choices feel significant and impactful for the character's final chapters
     ${chaptersRemaining === 1 ? "- These are the FINAL choices before the ending - make them deeply meaningful" : ""}
     ` : ""}
 
+    IMPORTANT:
     Thematic Focus (Motifs): ${motifs.join(", ")}
-    - Let these themes guide the narrative direction and emotional tone
-    - Weave them naturally into the story events
+    - Must weave these themes into the narrative direction and emotional tone
 
     Requirements:
     - Use second person ("You...")
+    - Choice must be specific, realistic, grounded and detailed.
+    - Each choice must be different and prospose a distinct path for the character's life.
     - Each choice MUST have clear trade-offs between different attributes and personality traits
     - Each choice should improve some attributes while potentially decreasing others
     - Consider how choices impact: Health, Family, Friend, Career, Wealth
     - Consider how choices reflect and develop: Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism
+    - If one of the character scores is below 40, the choice must be about that attribute and the character's life.
     - Examples of trade-offs:
       * Focusing on career might increase Career/Wealth but decrease Family/Friend
       * Taking risks might increase Openness/Extraversion but decrease Conscientiousness
@@ -655,7 +658,7 @@ export async function POST(req: NextRequest) {
       const jsonMatch = choicesText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
       const jsonText = jsonMatch ? jsonMatch[1] : choicesText;
       choicesData = JSON.parse(jsonText);
-    } catch (parseError) {
+    } catch {
       choicesData = [
         { text: "Continue forward", impacts: {} },
         { text: "Take a different path", impacts: {} },
@@ -664,6 +667,8 @@ export async function POST(req: NextRequest) {
     }
 
     if (isEnding) {
+      const endingMotifs = selectMotifsForChapter(nextAge);
+      
       const endingPrompt = `Write the final chapter (ending) of this person's life story.
 
       Character: ${updatedCharacter?.name} (${updatedCharacter?.gender})
@@ -679,6 +684,9 @@ export async function POST(req: NextRequest) {
       Last decision: "${decision.choiceText}"
 
       This is the final chapter after ${totalChapters} chapters of their life journey.
+
+      Thematic Focus (Motifs): ${endingMotifs.join(", ")}
+      - Must weave these themes into the narrative direction and emotional tone
 
       Requirements:
       - Use second person ("You...")
@@ -719,7 +727,7 @@ export async function POST(req: NextRequest) {
         id: endingId,
         text: endingText,
         age: nextAge,
-        motifs: ["Reflection", "Legacy", "Acceptance"],
+        motifs: endingMotifs,
         chapterNumber: chapterNumber,
         totalChapters: totalChapters,
         choices: [],
