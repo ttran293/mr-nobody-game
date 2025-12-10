@@ -46,7 +46,7 @@ export function GameActions({
           <Button
             variant="default"
             size="lg"
-            className="transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+            className="transition-all duration-200  active: shadow-md hover:shadow-lg"
             onClick={onRestart}
           >
             Restart Game
@@ -68,7 +68,7 @@ export function GameActions({
                     <Button
                       variant="outline"
                       size="lg"
-                      className="transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md"
+                      className="transition-all duration-200  active: shadow-sm hover:shadow-md"
                     >
                       Regret ({redoCountNow})
                     </Button>
@@ -103,7 +103,7 @@ export function GameActions({
                   size="lg"
                   onClick={onContinue}
                   disabled={hasChoices && !hasSelected}
-                  className={`transition-all duration-200 hover:scale-105 active:scale-95 shadow-md hover:shadow-lg ${
+                  className={`transition-all duration-200  active: shadow-md hover:shadow-lg ${
                     hasChoices && !hasSelected ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >

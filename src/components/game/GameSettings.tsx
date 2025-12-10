@@ -62,19 +62,73 @@ export function selectMotifsForChapter(
 ): string[] {
   let ageMotifs: string[];
   if (age < 5) {
-    ageMotifs = ["Family", "Play", "Learning", "Explore"];
+    ageMotifs = [
+      "Attachment and safety",
+      "Play vs rules",
+      "Curiosity and wonder",
+      "First fears",
+      "Family dependence",
+    ];
   } else if (age < 12) {
-    ageMotifs = ["Friendship", "School", "Curiosity", "Family", "First challenges"];
+    ageMotifs = [
+      "Friendship",
+      "School vs play",
+      "Imagination",
+      "Siblings and rivalry",
+      "Fairness and justice",
+      "Early responsibility",
+    ];
   } else if (age < 18) {
-    ageMotifs = ["Identity", "Peer pressure", "First love", "Rebellion", "Academic pressure", "Independence"];
+    ageMotifs = [
+      "Identity and self-image",
+      "Peer pressure",
+      "First love and crushes",
+      "Rebellion vs conformity",
+      "Academic pressure",
+      "Belonging vs isolation",
+      "Breakups and first heartbreak",
+    ];
   } else if (age < 26) {
-    ageMotifs = ["Career", "Self-discovery", "Romance", "Independence", "Life", "Risk-taking"];
+    ageMotifs = [
+      "Self-discovery vs career",
+      "Leaving home and independence",
+      "Romance and commitment",
+      "Risk-taking and experimentation",
+      "Friendships drifting or deepening",
+      "Financial precarity",
+      "Grief and first major loss",
+    ];
   } else if (age < 41) {
-    ageMotifs = ["Career", "Relationships", "Responsibility", "Work-life balance", "Starting a family", "Financial stability"];
+    ageMotifs = [
+      "Career vs family",
+      "Work-life balance",
+      "Long-term partnership strain",
+      "Parenting and sacrifice",
+      "Stability vs missed dreams",
+      "Debt, mortgages, and security",
+      "Loss of parents or mentors",
+    ];
   } else if (age < 61) {
-    ageMotifs = ["Legacy", "Midlife reflection", "Health", "Mentorship", "Career", "Parenting"];
+    ageMotifs = [
+      "Midlife reflection",
+      "Legacy vs present happiness",
+      "Health scares",
+      "Caring for aging parents",
+      "Mentorship and leadership",
+      "Children leaving home",
+      "Divorce, renewal, or stagnation",
+      "Coping with loss",
+    ];
   } else {
-    ageMotifs = ["Reflection", "Legacy", "Health decline", "Wisdom", "Loss", "Acceptance", "Memory"];
+    ageMotifs = [
+      "Reflection and life review",
+      "Legacy and meaning",
+      "Wisdom and advice-giving",
+      "Loneliness vs connection",
+      "Memory and forgetting",
+      "Acceptance of mortality",
+      "Outliving loved ones",
+    ];
   }
 
   const selectedMotifs: string[] = [];
@@ -203,10 +257,10 @@ export function generateRandomCharacter(): CharacterSettings {
     ],
     heath_score: randomInRange(80, 100),
     happiness_score: 100,
-    friend_score: 0,
-    career_score: 0,
+    friend_score: randomInRange(40, 60),
+    career_score: randomInRange(40, 60),
     family_score: randomInRange(50, 100),
-    wealth_score: 0,
+    wealth_score: randomInRange(40, 60),
     openness_score: 50,
     conscientiousness_score: 50,
     extraversion_score: 50,

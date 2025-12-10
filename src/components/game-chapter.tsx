@@ -52,7 +52,7 @@ export default function GameChapter({
           <MenuButton />
         </div>
         <div className="flex items-center justify-center py-12">
-          <p className="text-2xl font-lexend">Chapter not found</p>
+          <p className="text-2xl font-lexend"></p>
         </div>
       </div>
     );

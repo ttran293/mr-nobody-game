@@ -32,7 +32,7 @@ const StatBar = ({ label, value, tooltip }: StatBarProps) => {
 
       setTimeout(() => {
         setIndicators(prev => prev.filter(i => i.id !== id));
-      }, 1000);
+      }, 30000);
     }
     prevValue.current = value;
   }, [value]);
@@ -40,7 +40,9 @@ const StatBar = ({ label, value, tooltip }: StatBarProps) => {
   return (
     <div className="flex flex-col gap-1.5 relative">
       <div className="flex items-center gap-1.5">
-        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+        <span className="text-sm font-medium text-muted-foreground">
+          {label}
+        </span>
         {tooltip && (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -58,19 +60,21 @@ const StatBar = ({ label, value, tooltip }: StatBarProps) => {
       <div className="flex items-center gap-2">
         <div className="flex-1 h-2 bg-secondary/50 rounded-full overflow-hidden relative">
           <div
-            className={`h-full transition-all duration-300 ${getScoreColor(value)}`}
+            className={`h-full transition-all duration-300 ${getScoreColor(
+              value
+            )}`}
             style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
           />
-          {indicators.map(i => (
-            <span
-              key={i.id}
-              className={`absolute left-1/2 -translate-x-1/2 text-sm font-bold animate-float ${i.color}`}
-            >
-              {i.value}
-            </span>
-          ))}
         </div>
         <span className="text-sm font-semibold tabular-nums w-8">{value}</span>
+        {indicators.map((i) => (
+          <span
+            key={i.id}
+            className={`absolute left-1/2 -translate-x-1/2 text-lg font-bold animate-float ${i.color}`}
+          >
+            {i.value}
+          </span>
+        ))}
       </div>
     </div>
   );

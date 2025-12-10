@@ -24,14 +24,14 @@ export default async function Home() {
           >
             <Link href="/game">New Game</Link>
           </Button>
-          <Button
+          {/* <Button
             asChild
             size="lg"
             variant="outline"
             className="text-xl font-bold text-center w-full  "
           >
             <Link href="/demo">Play Demo</Link>
-          </Button>
+          </Button> */}
           {/* <Button
             asChild
             size="lg"
