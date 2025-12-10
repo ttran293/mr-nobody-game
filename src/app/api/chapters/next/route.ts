@@ -658,7 +658,7 @@ export async function POST(req: NextRequest) {
       const jsonMatch = choicesText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
       const jsonText = jsonMatch ? jsonMatch[1] : choicesText;
       choicesData = JSON.parse(jsonText);
-    } catch (parseError) {
+    } catch {
       choicesData = [
         { text: "Continue forward", impacts: {} },
         { text: "Take a different path", impacts: {} },

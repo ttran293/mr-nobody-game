@@ -35,7 +35,6 @@ export async function POST(req: NextRequest) {
     }
 
     const journeyContext = decisions.map((decision, index) => {
-      const chapter = chapters[decision.chapterId];
       const age = decision.chapterAge;
       const choiceText = decision.choiceText;
       const untakenChoices = decision.untakenChoices.map(c => c.text).join("; ");
